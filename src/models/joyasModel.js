@@ -47,8 +47,6 @@ const obtenerJoya = async (id) => {
     return result.rows[0];
 };
 
-module.exports = { obtenerJoya };
-
 module.exports = {
     getJoyas,
     getJoyasByFilters,

@@ -1,9 +1,10 @@
 const reportMiddleware = (req, res, next) => {
   const now = new Date();
+  const formattedDate = now.toLocaleDateString();
   const formattedTime = now.toLocaleTimeString();
   console.log(`
-    ${now} Ruta consultada: ${req.method} Resultado:${req.path} a las ${formattedTime}
-    `);
+    Fecha: ${formattedDate} Hora: ${formattedTime} - Ruta consultada: ${req.method} ${req.path}
+  `);
   next();
 };
 
