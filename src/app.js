@@ -11,6 +11,7 @@ const app = express()
 app.use(reportMiddleware)
 app.use(express.json())
 app.use(cors())
+app.use(morgan('dev'))
 
 // Routes
 app.use('/', joyasRoutes)

@@ -3,7 +3,7 @@ const { obtenerJoyas, obtenerJoyasConFiltros, getJoya } = require("../controller
 const { reportConsult } = require("../middlewares/otroMiddleware")
 const router = express.Router();
 
-router.get("/joyas", obtenerJoyas);
-router.get("/joyas/filtros", obtenerJoyasConFiltros);
+router.get("/joyas", reportConsult, obtenerJoyas);
+router.get("/joyas/filtros", reportConsult, obtenerJoyasConFiltros);
 router.get("/joyas/:id", reportConsult , getJoya)
 module.exports = router;
