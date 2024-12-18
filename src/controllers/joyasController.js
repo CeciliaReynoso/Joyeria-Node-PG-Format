@@ -1,4 +1,4 @@
-const { obtenerJoya, getJoyas, getJoyasByFilters } = require('../models/joyasModel');
+const { obtenerJoya, getJoyas, getJoyasByFilters, getTotalItems } = require('../models/joyasModel');
 
 // Generador de enlaces HATEOAS
 const generarHATEOAS = (joyas) => {
@@ -18,11 +18,18 @@ const obtenerJoyas = async (req, res) => {
     const { limits = 10, page = 1, order_by = "id_ASC" } = req.query;
     const [orderField, orderDirection] = order_by.split("_");
 
+    // Validar que los parámetros sean positivos
+if (limits <= 0 || page <= 0) {
+    return res.status(400).send("Los parametros limits y page deben ser positivos");
+}
     try {
         if (!["ASC", "DESC"].includes(orderDirection.toUpperCase())) {
             return res.status(400).send("El parámetro order_by debe terminar en ASC o DESC");
         }
 
+        const totalItems = await getTotalItems();//obtiene el número de elementos
+        const totalPages = Math.ceil(totalItems /limits);
+        
         const joyas = await getJoyas(Number(limits), Number(page), orderField, orderDirection);
 
         // Generar estructura HATEOAS
@@ -30,7 +37,9 @@ const obtenerJoyas = async (req, res) => {
 
         res.json({
             total: joyasHATEOAS.length,
-            joyas: joyasHATEOAS,
+            totalpages: totalPages,
+            currentPage: page,
+            joyas: joyasHATEOAS
         });
     } catch (error) {
         console.error(error);

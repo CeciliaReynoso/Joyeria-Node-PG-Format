@@ -3,7 +3,7 @@ const format = require('pg-format');
 
 // Obtener joyas con paginación y orden
 const getJoyas = async (limits, page, orderField, orderDirection) => {
-    const offset = (page - 1) * limits;
+    const offset = Math.abs((page - 1) * limits);
     const query = format(
         `SELECT * FROM joyas ORDER BY %I %s LIMIT %s OFFSET %s`,
         orderField,
@@ -47,10 +47,17 @@ const obtenerJoya = async (id) => {
     return result.rows[0];
 };
 
+const getTotalItems = async () => {
+    const query = "SELECT COUNT(*) FROM joyas";
+    const result = await DB.query(query);
+    return parseInt(result.rows[0].count, 10);
+};
+
 module.exports = {
     getJoyas,
     getJoyasByFilters,
-    obtenerJoya
+    obtenerJoya,
+    getTotalItems
 };
 
 //%L Para valores tipo cadena
